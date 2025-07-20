@@ -1,0 +1,89 @@
+# ===========================
+# OS Files
+# ===========================
+.DS_Store
+Thumbs.db
+
+# ===========================
+# IDEs and Editors
+# ===========================
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# ===========================
+# Logs
+# ===========================
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ===========================
+# Node Modules
+# ===========================
+node_modules/
+
+# ===========================
+# Java / Maven
+# ===========================
+target/
+*.class
+
+# ===========================
+# Python (if any scripts)
+# ===========================
+__pycache__/
+*.py[cod]
+*.pyo
+
+# ===========================
+# Terraform
+# ===========================
+*.tfstate
+*.tfstate.backup
+.terraform/
+crash.log
+terraform.tfvars
+
+# ===========================
+# CI/CD
+# ===========================
+# Secrets stored locally
+.env
+.env.*
+secrets.yml
+
+# ===========================
+# Backup files
+# ===========================
+*.bak
+*.swp
+
+# ===========================
+# Sonar, Trivy, Dependency Check Reports
+# ===========================
+dependency-check-report.html
+trivy-report.json
+.trivy/
+
+# ===========================
+# Database dumps/backups
+# ===========================
+*.sql
+backup_*.sql
+
+# ===========================
+# Miscellaneous
+# ===========================
+*.iml
+*.ipr
+*.iws
+
+# ===========================
+# Java Temporary Files
+# ===========================
+hs_err_pid*
+replay_pid*

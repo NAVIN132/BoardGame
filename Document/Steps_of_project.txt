@@ -1,0 +1,59 @@
+Steps  1 : Run the App Locally
+
+1. git clone https://github.com/DevOpsInstituteMumbai-wq/Automating-Secure-Deployment-of-Board-game-Listing-WebApp-on-AWS
+   cd BoardGame
+
+2. Run the application in local host and verify that it working 
+
+    mvn clean install
+ 
+    mvn spring-boot:run
+
+3. Access the Url to verify that application is running in localhost
+
+    http://localhost:8080/
+
+Steps  2 : Create the Infrasstructure : 
+
+1. Write all the .tf file as per project required : 
+
+├── terraform/
+│   ├── main.tf
+│   ├── variables.tf
+│   ├── outputs.tf
+│   ├── provider.tf
+│   ├── security_groups.tf
+│   ├── ec2.tf
+│   ├── alb.tf
+│   ├── rds.tf
+│   └── cloudwatch.tf
+
+Run the terraform init command which will initate the Provide and download it in our module.
+
+Run the terraform validate command which will validate all the configuration
+
+Generate the .pub file using below command : 
+
+ssh-keygen -y -f "/c/KCSWorks/DevOps/CapstoneProject/.ssh/appserverkey.pem" > "/c/KCSWorks/DevOps/CapstoneProject/.ssh/appserverkey.pub"
+
+Again Run the terraform validate command to check every thing is ok.
+
+Run the command terraform plan to check what plan is created and will be applied it will give the details.
+
+Run the below command to apply the : 
+
+
+terraform apply  ( Approval Require "yes"  throough prompting)
+
+or 
+
+terraform apply -auto-approve  ( Auto Approve ) 
+
+===> To Destory all the apply done by terraform : terraform destroy
+
+NOW ALL THE INFRASTRUCTURE IS READY : 
+
+Step 3 : 
+
+
+

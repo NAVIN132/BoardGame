@@ -12,12 +12,12 @@ pipeline {
       }
     }
     stage('Security Scan') {
-       agent {
-        docker {
-            sh 'docker run --rm aquasec/trivy:latest image trivy'
-            args '-v /var/run/docker.sock:/var/run/docker.sock'
-        }
-      }
+      //  agent {
+      //   docker {
+      //       sh 'docker run --rm aquasec/trivy:latest image trivy'
+      //       args '-v /var/run/docker.sock:/var/run/docker.sock'
+      //   }
+      // }
       steps {
         sh 'chmod +x ./security/trivy-scan.sh'
         sh './security/trivy-scan.sh'

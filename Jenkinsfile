@@ -13,7 +13,9 @@ pipeline {
     }
     stage('Security Scan') {
       steps {
+        sh 'chmod +x ./security/trivy-scan.sh'
         sh './security/trivy-scan.sh'
+        sh 'chmod +x ./security/dependency-check.sh'
         sh './security/dependency-check.sh'
       }
     }

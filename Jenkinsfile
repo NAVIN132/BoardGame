@@ -4,7 +4,7 @@ pipeline {
     environment {
         TRIVY_VERSION = "0.51.1"
         DEP_CHECK_VERSION = "9.2.0"
-        INSTANCE_IP = credentials('ec2-instance-ip') // replace with your Jenkins credential ID for EC2 IP or define manually
+       // INSTANCE_IP = credentials('ec2-instance-ip') // replace with your Jenkins credential ID for EC2 IP or define manually
     }
 
     stages {

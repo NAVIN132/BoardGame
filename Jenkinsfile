@@ -24,39 +24,33 @@ pipeline {
             }
         }
 
-        stage('Trivy Source Scan') {
-            steps {
-                script {
-                    // Dynamically install Trivy if not present
-                    sh '''
-                    if ! command -v trivy &> /dev/null
-                    then
-                        echo "Trivy not found, installing..."
-                        wget -qO trivy.tar.gz https://github.com/aquasecurity/trivy/releases/download/v${TRIVY_VERSION}/trivy_${TRIVY_VERSION}_Linux-64bit.tar.gz
-                        tar zxvf trivy.tar.gz
-                        sudo mv trivy /usr/local/bin/trivy
-                        chmod +x /usr/local/bin/trivy
-                        trivy --version
-                    else
-                        echo "Trivy is already installed."
-                    fi
-                    '''
+     stage('Trivy Source Scan') {
+    steps {
+        script {
+            sh '''
+            # Check if Trivy is already present locally
+            if [ ! -f "./trivy" ]; then
+                echo "Trivy not found, downloading locally..."
+                wget -qO trivy.tar.gz https://github.com/aquasecurity/trivy/releases/download/v${TRIVY_VERSION}/trivy_${TRIVY_VERSION}_Linux-64bit.tar.gz
+                tar zxvf trivy.tar.gz
+                chmod +x trivy
+                ./trivy --version
+            else
+                echo "Trivy is already downloaded."
+                ./trivy --version
+            fi
 
-                    // Run Trivy source scan
-                    sh '''
-                    echo "Running Trivy source scan on repository..."
+            echo "Running Trivy scan on source..."
 
-                    # Ensure your workspace is clean to avoid scanning unnecessary files
-                    trivy config --exit-code 0 --severity HIGH,CRITICAL .
+            # Scan source for vulnerabilities and secrets
+            ./trivy fs --exit-code 0 --scanners vuln,secret,config --severity HIGH,CRITICAL .
 
-                    # Run secret scan
-                    trivy fs --exit-code 0 --scanners secret --severity HIGH,CRITICAL .
-
-                    echo "Trivy source scanning completed."
-                    '''
-                }
-            }
+            echo "Trivy source scan completed successfully."
+            '''
         }
+    }
+}
+
 
         stage('Dependency Check') {
             steps {

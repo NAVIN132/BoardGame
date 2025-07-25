@@ -52,12 +52,34 @@ pipeline {
 }
 
 
-        stage('Dependency Check') {
+       stage('Dependency Check') {
             steps {
-                sh 'chmod +x ./security/dependency-check.sh'
-                sh './security/dependency-check.sh'
+                script {
+                    sh '''
+                    mkdir -p tools
+
+                    if [ ! -d "tools/dependency-check" ]; then
+                        echo "Downloading OWASP Dependency-Check..."
+                        wget https://github.com/jeremylong/DependencyCheck/releases/download/v${DEP_CHECK_VERSION}/dependency-check-${DEP_CHECK_VERSION}-release.zip -O tools/dependency-check.zip
+                        unzip -q tools/dependency-check.zip -d tools/
+                        mv tools/dependency-check-${DEP_CHECK_VERSION} tools/dependency-check
+                    fi
+
+                    echo "Running Dependency-Check scan..."
+                    tools/dependency-check/bin/dependency-check.sh --project "BoardGame-App" --scan . --format "HTML" --out "dependency-check-report"
+                    '''
+                }
             }
         }
+    } 
+    
+    post {
+        always {
+            archiveArtifacts artifacts: 'dependency-check-report/dependency-check-report.html', fingerprint: true
+        }
+    }
+
+    
 
         // stage('Deploy') {
         //     steps {

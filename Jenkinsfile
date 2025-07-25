@@ -14,7 +14,7 @@ pipeline {
     stage('Security Scan') {
        agent {
         docker {
-            image 'aquasec/trivy:latest'
+            sh 'docker run --rm aquasec/trivy:latest image trivy'
             args '-v /var/run/docker.sock:/var/run/docker.sock'
         }
       }

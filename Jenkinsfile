@@ -54,50 +54,48 @@ pipeline {
             }
         }
 
-        stage('Dependency Check') {
+       stage('Dependency Check') {
     environment {
-        DEP_CHECK_VERSION = '9.2.0'  // ✅ Set version here
+        DEP_CHECK_VERSION = '9.2.0'
     }
     steps {
-        script {
-            echo "✅ Starting OWASP Dependency-Check v${DEP_CHECK_VERSION}..."
+        withCredentials([string(credentialsId: '0dea9a63-a33d-470f-bd50-fb36a8ce8034', variable: 'NVD_API_KEY')]) {
+            script {
+                echo "✅ Starting OWASP Dependency-Check v${DEP_CHECK_VERSION}..."
 
-            sh """
-            set -e  # Exit on first error
-            mkdir -p tools
+                sh """
+                set -e
+                mkdir -p tools
 
-            if [ ! -d "tools/dependency-check" ]; then
-                echo "⬇️ Downloading Dependency-Check v${DEP_CHECK_VERSION}..."
-                wget -q https://github.com/jeremylong/DependencyCheck/releases/download/v${DEP_CHECK_VERSION}/dependency-check-${DEP_CHECK_VERSION}-release.zip -O tools/dependency-check.zip
-                
-                echo "📦 Extracting Dependency-Check..."
-                unzip -q tools/dependency-check.zip -d tools/
-
-                # Dynamically find the extracted directory in case the folder name changes
-                folder=\$(find tools -maxdepth 1 -type d -name "dependency-check-*")
-
-                if [ -n "\$folder" ]; then
-                    mv "\$folder" tools/dependency-check
-                else
-                    echo "❌ Error: Extracted Dependency-Check folder not found."
-                    exit 1
+                if [ ! -d "tools/dependency-check" ]; then
+                    echo "⬇️ Downloading Dependency-Check v${DEP_CHECK_VERSION}..."
+                    wget -q https://github.com/jeremylong/DependencyCheck/releases/download/v${DEP_CHECK_VERSION}/dependency-check-${DEP_CHECK_VERSION}-release.zip -O tools/dependency-check.zip
+                    unzip -q tools/dependency-check.zip -d tools/
+                    
+                    folder=\$(find tools -maxdepth 1 -type d -name "dependency-check-*")
+                    if [ -n "\$folder" ]; then
+                        mv "\$folder" tools/dependency-check
+                    else
+                        echo "❌ Error: Extracted Dependency-Check folder not found."
+                        exit 1
+                    fi
                 fi
-            else
-                echo "📁 Dependency-Check already available."
-            fi
 
-            echo "🔍 Running Dependency-Check scan for BoardGame-App..."
-            tools/dependency-check/bin/dependency-check.sh \\
-                --project "BoardGame-App" \\
-                --scan . \\
-                --format "HTML" \\
-                --out dependency-check-report
+                echo "🔍 Running Dependency-Check scan for BoardGame-App with NVD API key..."
+                tools/dependency-check/bin/dependency-check.sh \\
+                    --nvdApiKey \$NVD_API_KEY \\
+                    --project "BoardGame-App" \\
+                    --scan . \\
+                    --format "HTML" \\
+                    --out dependency-check-report
 
-            echo "✅ Dependency-Check scan completed. Report saved to: dependency-check-report"
-            """
+                echo "✅ Dependency-Check scan completed. Report: dependency-check-report/index.html"
+                """
+            }
         }
     }
 }
+
 
 
         // stage('Deploy') {

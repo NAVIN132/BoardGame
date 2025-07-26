@@ -114,7 +114,7 @@ pipeline {
     post {
         always {
             echo "✅ Archiving Dependency-Check report..."
-            archiveArtifacts artifacts: 'dependency-check-report/dependency-check-report.html', fingerprint: true
+          //  archiveArtifacts artifacts: 'dependency-check-report/dependency-check-report.html', fingerprint: true
             echo "✅ Pipeline execution completed."
         }
     }

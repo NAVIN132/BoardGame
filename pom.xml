@@ -38,6 +38,7 @@
                 <configuration>
                     <source>${maven.compiler.source}</source>
                     <target>${maven.compiler.target}</target>
+                    <nvdApiKey>0dea9a63-a33d-470f-bd50-fb36a8ce8034</nvdApiKey>
                 </configuration>
             </plugin>
         </plugins>
